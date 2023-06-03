@@ -1,36 +1,37 @@
+import java.security.ProtectionDomain;
+
 public class Polynomial extends Function{
     private final double[] coefficient;
-    private final int biggestPower;
+    private final int arrSize;
 
     public Polynomial(double... varargs){
-        int arrSize = varargs.length;
+        this.arrSize = varargs.length;
+        this.coefficient = new double[arrSize];
 
-
-        if(arrSize==1){
-            new Constant(varargs[0]);
-        }
-        int j = 1;
-        boolean flag = true;
-        while ((j < arrSize)&&flag){
-            if (varargs[j] != 0){
-                flag = false;
-            }
-            j++;
-        }
-        if(flag){
-            new Constant(varargs[0]);
-        }
-
-        this.biggestPower = arrSize - 1;
-        this.coefficient = new double[biggestPower + 1];
-
-        for(int i = 0; i < biggestPower + 1;i++){
+        for(int i = 0; i < arrSize ;i++){
             this.coefficient[i] = varargs[i];
         }
     }
+    protected int findFirstNonZero(){
+        double currentCoefficient;
+        if(arrSize==1){
+            return 0;
+        }
+        else{
+            for (int i = 1 ;i < arrSize; i++) {
+                currentCoefficient = getCoefficient(i);
+                if (currentCoefficient !=0){
+                    return i;
+                }
+            }
+        }
+
+
+            return arrSize;
+    }
 
     public Polynomial(double constant){
-        this.biggestPower = 0;
+        this.arrSize = 1;
         coefficient = new double[1];
         coefficient[0] = constant;
     }
@@ -38,42 +39,93 @@ public class Polynomial extends Function{
     protected double getCoefficient(int i){
         return coefficient[i];
     }
-    @Override
-    public String toString() {
-        StringBuilder string = new StringBuilder();
-        double currentCoefficient = getCoefficient(0);
-        if(currentCoefficient!=0){
-            if(convertInt(currentCoefficient)){
-                string.append((int)currentCoefficient);
-            }
-            else{
-                string.append(currentCoefficient);
+    public int countNonZeroCoefficient(){
+        int count = 0;
+        for(int i = 0 ;i < arrSize ;i++){
+            if(getCoefficient(i)!=0){
+                count++;
             }
         }
 
-        for(int i = 1 ; i< this.biggestPower +1; i++){
-            currentCoefficient = this.getCoefficient(i);
-            if(currentCoefficient !=0){
-                if(currentCoefficient >0) {
-                    string.append(" + ");
+        return count;
+    }
+    @Override
+    public String toString() {
+        double[] nonZeroCoefficientArray;
+        int[] nonZeroIndexArray;
+        int count = this.countNonZeroCoefficient();
+
+        if(count == 0 ){
+            return "(0)";
+        }
+
+
+        nonZeroCoefficientArray = new double[count];
+        nonZeroIndexArray = new int[count];
+        int counter = 0;
+        for(int i = 0 ;i < arrSize ;i++ ){
+            double currentCoefficient = getCoefficient(i);
+            if(currentCoefficient!=0){
+                nonZeroCoefficientArray[counter] = currentCoefficient;
+                nonZeroIndexArray[counter] = i;
+                counter++;
+            }
+        }
+
+
+        StringBuilder string = new StringBuilder();
+        int firstIndex = nonZeroIndexArray[0];
+        double firstCoefficient = nonZeroCoefficientArray[0] ;
+        if(firstIndex == 0) {
+            if (convertInt(firstCoefficient)) {
+                string.append((int) firstCoefficient);
+            } else {
+                string.append(firstCoefficient);
+            }
+        }
+        else {
+            if (absoluteValue(firstCoefficient) != 1) {
+                if(convertInt(firstCoefficient)){
+                    string.append((int)firstCoefficient);
                 }
                 else{
-                    string.append(" - ");
+                    string.append(firstCoefficient);
                 }
-                double absoluteVal = Function.absoluteValue(currentCoefficient);
-                if(absoluteVal != 1){
-                    if(Function.convertInt(currentCoefficient)){
-                        string.append((int)absoluteVal);
-                    }
-                    else {
-                        string.append(absoluteVal);
-                    }
+            }
+            else{
+                if(firstCoefficient<0){
+                    string.append("-");
                 }
-                string.append("x");
-                if (i!=1) {
-                    string.append("^").append(i);
-                }
+            }
+        }
+        if(firstIndex>=1){
+            string.append("x");
+        }
+        if(firstIndex>1){
+            string.append("^").append(firstIndex);
+        }
 
+        for(int i = 1 ;i < count ;i++){
+            double currentNumber = nonZeroCoefficientArray[i];
+            int currentIndex = nonZeroIndexArray[i];
+            if(currentNumber > 0){
+                string.append(" + ");
+            }
+            else{
+                string.append(" - ");
+            }
+            currentNumber = absoluteValue(currentNumber);
+            if(currentNumber!=1){
+                if(convertInt(currentNumber)){
+                    string.append((int)currentNumber);
+                }
+                else{
+                    string.append(currentNumber);
+                }
+            }
+            string.append("x");
+            if(currentIndex > 1){
+                string.append("^").append(currentIndex);
             }
         }
         return "(" + string + ")";
@@ -81,18 +133,19 @@ public class Polynomial extends Function{
 
     @Override
     public Polynomial derivative() {
-        if (biggestPower == 0){
+        if ((arrSize == 1) ||findFirstNonZero()==arrSize){
             return new Constant(0);
         }
-        if (biggestPower == 1){
+        if (arrSize == 2){
             return new Constant(this.getCoefficient(1));
         }
         else {
-            double[] DervCoeff = new double[biggestPower];
-            for(int i = 0 ; i<biggestPower;i++) {
-                DervCoeff[i] = this.getCoefficient(i+1)*(i+1);
+            int newArrSize = arrSize-1;
+            double[] DervCoefficient = new double[newArrSize];
+            for(int i = 0 ; i<newArrSize;i++) {
+                DervCoefficient[i] = this.getCoefficient(i+1)*(i+1);
             }
-            return new Polynomial(DervCoeff);
+            return new Polynomial(DervCoefficient);
         }
     }
 
@@ -100,7 +153,7 @@ public class Polynomial extends Function{
     @Override
     public double valueAt(double x) {
         double value = this.getCoefficient(0) ;
-        for(int i = 1; i< biggestPower+1 ; i++){
+        for(int i = 1; i< arrSize ; i++){
             value += this.getCoefficient(i)*Math.pow(x,i);
         }
         return value;
