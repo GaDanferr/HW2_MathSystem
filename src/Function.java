@@ -30,9 +30,9 @@ public abstract class Function {
         double left = a;
         double right = b;
         double mid;
-        while (absoluteValue(right-left)>error){
+        while (right-left>error){
             mid = (left + right) / 2;
-            if (this.valueAt(left)*this.valueAt(right) >0){
+            if (this.valueAt(left)*this.valueAt(mid) >0){
                 left = mid;
             }
             else{

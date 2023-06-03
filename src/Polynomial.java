@@ -5,6 +5,7 @@ public class Polynomial extends Function{
     public Polynomial(double... varargs){
         int arrSize = varargs.length;
 
+
         if(arrSize==1){
             new Constant(varargs[0]);
         }
@@ -34,7 +35,7 @@ public class Polynomial extends Function{
         coefficient[0] = constant;
     }
 
-    public double getCoefficient(int i){
+    protected double getCoefficient(int i){
         return coefficient[i];
     }
     @Override

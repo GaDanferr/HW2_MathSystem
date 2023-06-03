@@ -8,6 +8,9 @@ public class MultiProduct extends Function {
             this.functions[i] = functionsList[i];
         }
     }
+    protected Function getFunction(int i){
+        return functions[i];
+    }
 
     @Override
     public double valueAt(double x) {

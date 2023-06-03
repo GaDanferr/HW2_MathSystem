@@ -32,37 +32,3 @@ public abstract class Helper {
         }
     }
 }
-
-    /*public boolean checkValid(int date ,Time time){
-        switch(time){
-            case MINUTE:
-                if((date>=0)&&(date<=59)){
-                    return true;
-                }
-                break;
-            case HOUR:
-                if((date>=0) &&(date<=23)){
-                    return true;
-                }
-                break;
-            case DAY:
-                if((date >= 1) && (date <= 31)){
-                    return true;
-                }
-                break;
-            case MONTH:
-                if((date >= 1) &&(date <= 12)){
-                    return true;
-                }
-                break;
-            case YEAR:
-                if((date>= -3999)&&(date<=3999)){
-                    return true;
-
-                }
-                break;
-        }
-        return false;
-    }
-}
-*/

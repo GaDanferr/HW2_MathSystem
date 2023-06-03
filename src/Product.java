@@ -1,26 +1,15 @@
-public class Product extends Function {
-    private final Function funcOne;
-    private final Function funcTwo;
+public class Product extends MultiProduct {
+
 
     public Product(Function funcOne,Function funcTwo) {
-        this.funcOne = funcOne;
-        this.funcTwo = funcTwo;
+        super(funcOne,funcTwo);
     }
 
-    @Override
-    public double valueAt(double x) {
-        return funcOne.valueAt(x) * funcTwo.valueAt(x);
-    }
-
-    @Override
-    public String toString() {
-        return "(" + funcOne + " * " + funcTwo + ")";
-    }
 
     @Override
     public Sum derivative() {
-        Product leftProduct = new Product(funcOne.derivative(),funcTwo);
-        Product rightProduct = new Product(funcOne,funcTwo.derivative());
+        Product leftProduct = new Product(getFunction(0).derivative(),getFunction(1));
+        Product rightProduct = new Product(getFunction(0),getFunction(1).derivative());
         return new Sum(leftProduct,rightProduct);
     }
 

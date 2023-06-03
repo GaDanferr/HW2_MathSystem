@@ -26,6 +26,9 @@ public class MultiSum extends Function{
 
     @Override
     public MultiSum derivative() {
+        if(sumSize==2){
+            return new Sum(functions[0].derivative(),functions[1].derivative());
+        }
         Function[] derivatives = new Function[sumSize];
         for (int i = 0 ; i < sumSize ; i++){
             derivatives[i] = functions[i].derivative();
