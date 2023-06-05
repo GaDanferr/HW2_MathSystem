@@ -20,7 +20,6 @@ public class Main {
         Object o2 = d2;
         System.out.println("d1 with o1: " + d1.equals(o1));
         System.out.println("o1 with d1: " + o1.equals(d1));
-
         System.out.println("d1 with dt1: " + d1.equals(dt1));
         System.out.println("dt1 with d1: " + dt1.equals(d1));
         System.out.println("d1 with d2: " + d1.equals(d2));
@@ -61,11 +60,8 @@ public class Main {
         System.out.println("-------------------- Tests for part B --------------------");
         rnd = new Random(42);
 
-
         Function const1 = new Constant(12345);
         testFunction(const1, "const1", 10);
-
-
 
         Function const2 = new Constant(12.391709);
         testFunction(const2, "const2", 10);

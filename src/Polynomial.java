@@ -1,9 +1,16 @@
-import java.security.ProtectionDomain;
-
+/**Depicts a polyinomial function
+ *
+ *  Coefficient depicts the cofficient of the polynomial and the index depicts the power of the X.
+ *  arrSize Depicts the size of the inputted array.
+ */
 public class Polynomial extends Function{
     private final double[] coefficient;
     private final int arrSize;
 
+    /**
+     * Creates a new polynomial function
+     * @param varargs the coefficient of the polynomial whereas the index of the array would be the power of the X.
+     */
     public Polynomial(double... varargs){
         this.arrSize = varargs.length;
         this.coefficient = new double[arrSize];
@@ -30,15 +37,14 @@ public class Polynomial extends Function{
             return arrSize;
     }
 
-    public Polynomial(double constant){
-        this.arrSize = 1;
-        coefficient = new double[1];
-        coefficient[0] = constant;
-    }
-
     protected double getCoefficient(int i){
         return coefficient[i];
     }
+
+    /**
+     * Counts the amount of Non-Zero coefficients the polynomial contains. Used exclusively by the toString method.
+     * @return integer depicting the amount of Non-zero coefficients.
+     */
     public int countNonZeroCoefficient(){
         int count = 0;
         for(int i = 0 ;i < arrSize ;i++){
@@ -46,9 +52,19 @@ public class Polynomial extends Function{
                 count++;
             }
         }
-
         return count;
     }
+
+    /**
+     * Creates a string depicting the polynomial with the following attributes:
+     * ax^i : a - depicts the coefficient , i - depicts the power x is being raised by.
+     * in addition:
+     * (1) if all coefficients are 0 the string representing the polynomial would be : (0)
+     * (2) if a coefficient is 1 or -1 they are being ignored and print as x^i or -x^i respectively
+     * unless they are the free number.
+     * (3) ignores all 0's if there is at least one non-zero coefficient.
+     * @return a string representing the polynomial with said restrictions.
+     */
     @Override
     public String toString() {
         double[] nonZeroCoefficientArray;
@@ -149,7 +165,11 @@ public class Polynomial extends Function{
         }
     }
 
-
+    /**
+     * Evaluates the polynomial at the point x.
+     * @param x receives as input a point in which the function will be evaluated.
+     * @return the value of the function at x.
+     */
     @Override
     public double valueAt(double x) {
         double value = this.getCoefficient(0) ;
