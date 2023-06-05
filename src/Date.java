@@ -114,6 +114,10 @@ public class Date {
             return false;
         }
         Date otherDate = (Date) other;
+
+        if(otherDate.hashCode() != hashCode()){
+            return false;
+        }
         return (otherDate.getDay() == this.day) && (otherDate.getMonth() == this.month) &&
                 (otherDate.getYear() == this.year);
     }

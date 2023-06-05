@@ -35,12 +35,7 @@ public class DateTime extends Date{
     @Override
     public int hashCode() {
 
-        if (getYear() < 0) {
-            return - this.minute -(this.hour * 60) + super.hashCode();
-        }
-        else{
-            return this.minute + (this.hour * 60) + super.hashCode();
-        }
+        return (this.minute) + (this.hour * 60) + super.hashCode() +1 ;
     }
 
     @Override
@@ -49,6 +44,9 @@ public class DateTime extends Date{
             return false;
         }
         DateTime otherDate = (DateTime) other;
+        if(otherDate.hashCode() != this.hashCode()){
+            return false;
+        }
         return (otherDate.getMinute() == this.minute) && (otherDate.getHour() == this.hour) &&
                 (otherDate.getDay() == this.getDay())&& (otherDate.getMonth() == this.getMonth()) &&
                 (otherDate.getYear() == this.getYear());
