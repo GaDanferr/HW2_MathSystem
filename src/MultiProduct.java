@@ -1,21 +1,17 @@
-public class MultiProduct extends Function {
-    final Function[] functions;
-    final int funcCount;
-    public MultiProduct(Function... functionsList){
-        this.funcCount = functionsList.length;
-        this.functions = new Function[funcCount];
-        for(int i = 0 ; i<funcCount; i++){
-            this.functions[i] = functionsList[i];
-        }
+public class MultiProduct extends MultiFunction {
+
+    public MultiProduct(Function firstFunction, Function secondFunction ,Function... otherFunctions){
+        super(firstFunction,secondFunction,otherFunctions);
     }
-    protected Function getFunction(int i){
-        return functions[i];
-    }
+
 
     @Override
     public double valueAt(double x) {
+        Function[] functions;
+        int functionCount = getFunctionCount();
+        functions = getFunctions();
         double value = functions[0].valueAt(x);
-        for(int i = 1 ; i < funcCount ; i++){
+        for(int i = 1; i < functionCount; i++){
             value *= functions[i].valueAt(x);
         }
         return value;
@@ -23,8 +19,10 @@ public class MultiProduct extends Function {
 
     @Override
     public String toString() {
+        Function[] functions = getFunctions();
+        int functionCount = getFunctionCount();
         StringBuilder functionsString = new StringBuilder(functions[0].toString());
-        for(int i = 1 ; i<funcCount ; i++){
+        for(int i = 1; i< functionCount; i++){
             functionsString.append(" * ").append(functions[i].toString());
         }
         return "("+ functionsString +")";
@@ -33,13 +31,16 @@ public class MultiProduct extends Function {
     @Override
     public Function derivative()
     {
-        MultiProduct[] sumOfDerivatives = new MultiProduct[funcCount];
-        Function[] certainDerivative = new Function[funcCount];
+        int functionCount = getFunctionCount();
+        Function[] functions = getFunctions();
+        MultiProduct[] sumOfDerivatives = new MultiProduct[functionCount];
+        Function[] certainDerivative = new Function[functionCount];
         int offset;
-        for(int i = 0 ; i < funcCount ; i++){
+        Function[] tmp;
+        for(int i = 0; i < functionCount; i++){
             certainDerivative[0] = functions[i].derivative();
             offset = 1;
-            for(int j = 0 ; j < funcCount; j++){
+            for(int j = 0; j < functionCount; j++){
                 if(i!=j) {
                     certainDerivative[j+offset] = functions[j];
                 }
@@ -47,9 +48,20 @@ public class MultiProduct extends Function {
                     offset = 0;
                 }
             }
-            sumOfDerivatives[i] = new MultiProduct(certainDerivative);
+            tmp = Converter(certainDerivative);
+            sumOfDerivatives[i] = new MultiProduct(certainDerivative[0],certainDerivative[1],tmp) ;
         }
-        return new MultiSum(sumOfDerivatives) ;
+        tmp = Converter(sumOfDerivatives);
+        return new MultiSum(sumOfDerivatives[0],sumOfDerivatives[1],tmp) ;
+    }
+    protected Function[] Converter(Function... functions) {
+
+        int otherFunctionSize = functions.length-2;
+        Function[] otherFunctions = new Function[otherFunctionSize];
+        for (int i = 0; i < otherFunctionSize; i++) {
+            otherFunctions[i] = functions[i + 2];
+        }
+        return otherFunctions;
     }
 
 

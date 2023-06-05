@@ -1,10 +1,8 @@
 public class Product extends MultiProduct {
 
-
-    public Product(Function funcOne,Function funcTwo) {
-        super(funcOne,funcTwo);
+    public Product(Function firstFunction,Function secondFunction) {
+        super(firstFunction,secondFunction);
     }
-
 
     @Override
     public Sum derivative() {

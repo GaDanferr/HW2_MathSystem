@@ -29,23 +29,29 @@ public class DateTime extends Date{
     @Override
     public String toString() {
 
-        return super.toString() +" "  +Helper.bufferDate(hour,Time.HOUR)+ ":" + Helper.bufferDate(minute,Time.MINUTE);
+        return super.toString() + " "  + bufferDate(hour, Time.HOUR)+ ":" + bufferDate(minute, Time.MINUTE);
     }
 
     @Override
     public int hashCode() {
-        return this.minute + this.hour*60 +super.hashCode();
+
+        if (getYear() < 0) {
+            return - this.minute -(this.hour * 60) + super.hashCode();
+        }
+        else{
+            return this.minute + (this.hour * 60) + super.hashCode();
+        }
     }
 
     @Override
     public boolean equals(Object other) {
-        if(!(other instanceof DateTime) ){ //cant use this need to think of another method?
+        if(!(other instanceof DateTime) ){
             return false;
-        } //need to check date too
+        }
         DateTime otherDate = (DateTime) other;
         return (otherDate.getMinute() == this.minute) && (otherDate.getHour() == this.hour) &&
-                (otherDate.getDay() == this.day)&& (otherDate.getMonth() == this.month) &&
-                (otherDate.getYear() == this.year);
+                (otherDate.getDay() == this.getDay())&& (otherDate.getMonth() == this.getMonth()) &&
+                (otherDate.getYear() == this.getYear());
     }
 
 

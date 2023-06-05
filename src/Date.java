@@ -1,7 +1,39 @@
 public class Date {
-    protected int year;
-    protected int month;
-    protected int day;
+    private int year;
+    private int month;
+    private int day;
+    public static String bufferDate(int date , Time time) {
+        if(time!=Time.YEAR){
+            if(date<10){
+                return "0"+date;
+            }
+            else{
+                return ""+date;
+            }
+        }
+        else{
+            int absoluteYear;
+            if(date < 0) {
+                absoluteYear = -1 * date;
+            }
+            else {
+                absoluteYear = date;
+            }
+            if(absoluteYear>1000){
+                return ""+date;
+            }
+            if(absoluteYear>100) {
+                return "0" + date;
+            }
+            if(absoluteYear>10) {
+                return "00" + date;
+            }
+            else{
+                return "000"+date;
+            }
+
+        }
+    }
 
     public Date(int year , int month , int day){
         setYear(year);
@@ -47,7 +79,6 @@ public class Date {
         if(!(checkValid(year,Time.YEAR))){
             year = 0;
         }
-
         this.year = year;
     }
 
@@ -68,13 +99,13 @@ public class Date {
     @Override
     public String toString() {
 
-        return Helper.bufferDate(day,Time.DAY) + "/" + Helper.bufferDate(month,Time.MONTH)
-                + "/" + Helper.bufferDate(year,Time.YEAR);
+        return bufferDate(day,Time.DAY) + "/" + bufferDate(month,Time.MONTH)
+                + "/" + bufferDate(year,Time.YEAR);
     }
 
     @Override
     public int hashCode() {
-        return this.day*(60*24) + (60*24*32)*this.month + (60*24*32*13)*this.year;
+        return (this.day-1)*(60*24) + ((60*24*31)*(this.month-1)) + (60*24*31*12)*this.year;
     }
 
     @Override
